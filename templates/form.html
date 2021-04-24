@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Keyword Extraction</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" integrity="sha512-RXf+QSDCUQs5uwRKaDoXt55jygZZm2V++WUZduaU/Ui/9EGp3f/2KZVahFZBKGH0s774sd3HmrhUy+SgOFQLVQ==" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <style>
+        .img {
+            width: 45px;
+        }
+
+        .navbar {
+            height: 60px;
+        }
+
+        .center-table {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        ul.list {
+            list-style: none;
+        }
+
+        .list {
+            padding-left: 20px !important;
+        }
+
+        #dvData {
+            display: none;
+        }
+
+        a.close-modal-circle {
+            position: absolute;
+            top: -12.5px;
+            right: -12.5px;
+            display: block;
+            width: 30px;
+            height: 30px;
+            text-indent: -9999px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center center;
+            z-index: 99;
+            cursor: pointer;
+            background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAYAAAA6/NlyAAAAAXNSR0IArs4c6QAAA3hJREFUaAXlm8+K00Acx7MiCIJH/yw+gA9g25O49SL4AO3Bp1jw5NvktC+wF88qevK4BU97EmzxUBCEolK/n5gp3W6TTJPfpNPNF37MNsl85/vN/DaTmU6PknC4K+pniqeKJ3k8UnkvDxXJzzy+q/yaxxeVHxW/FNHjgRSeKt4rFoplzaAuHHDBGR2eS9G54reirsmienDCTRt7xwsp+KAoEmt9nLaGitZxrBbPFNaGfPloGw2t4JVamSt8xYW6Dg1oCYo3Yv+rCGViV160oMkcd8SYKnYV1Nb1aEOjCe6L5ZOiLfF120EjWhuBu3YIZt1NQmujnk5F4MgOpURzLfAwOBSTmzp3fpDxuI/pabxpqOoz2r2HLAb0GMbZKlNV5/Hg9XJypguryA7lPF5KMdTZQzHjqxNPhWhzIuAruOl1eNqKEx1tSh5rfbxdw7mOxCq4qS68ZTjKS1YVvilu559vWvFHhh4rZrdyZ69Vmpgdj8fJbDZLJpNJ0uv1cnr/gjrUhQMuI+ANjyuwftQ0bbL6Erp0mM/ny8Fg4M3LtdRxgMtKl3jwmIHVxYXChFy94/Rmpa/pTbNUhstKV+4Rr8lLQ9KlUvJKLyG8yvQ2s9SBy1Jb7jV5a0yapfF6apaZLjLLcWtd4sNrmJUMHyM+1xibTjH82Zh01TNlhsrOhdKTe00uAzZQmN6+KW+sDa/JD2PSVQ873m29yf+1Q9VDzfEYlHi1G5LKBBWZbtEsHbFwb1oYDwr1ZiF/2bnCSg1OBE/pfr9/bWx26UxJL3ONPISOLKUvQza0LZUxSKyjpdTGa/vDEr25rddbMM0Q3O6Lx3rqFvU+x6UrRKQY7tyrZecmD9FODy8uLizTmilwNj0kraNcAJhOp5aGVwsAGD5VmJBrWWbJSgWT9zrzWepQF47RaGSiKfeGx6Szi3gzmX/HHbihwBser4B9UJYpFBNX4R6vTn3VQnez0SymnrHQMsRYGTr1dSk34ljRqS/EMd2pLQ8YBp3a1PLfcqCpo8gtHkZFHKkTX6fs3MY0blKnth66rKCnU0VRGu37ONrQaA4eZDFtWAu2fXj9zjFkxTBOo8F7t926gTp/83Kyzzcy2kZD6xiqxTYnHLRFm3vHiRSwNSjkz3hoIzo8lCKWUlg/YtGs7tObunDAZfpDLbfEI15zsEIY3U/x/gHHc/G1zltnAgAAAABJRU5ErkJggg==);
+        }
+
+        .loader {
+            position: fixed;
+            left: 0px;
+            top: 0px;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            background: rgba(0, 0, 0, 0.3);
+            display: none;
+        }
+
+        .loader img {
+            position: relative;
+            left: 40%;
+            top: 40%;
+        }
+
+        .display-wordcloud {
+            width: 100%;
+        }
+
+        .modal-footer {
+            background-color: #000000;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="loader"><img src="https://lh3.googleusercontent.com/proxy/nj45B2PZh4Jl5sbrUWcmo9YZvPGlbxGIQHeYq77_rEG1b1_9KT9_NWbtvafNQlByVgT2e5_quvhFJF1h28TGKBzehwY0oJBpczxd--kYX_8"></div>
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark sticky-top">
+        <div class="text-light mr-3">
+            <img class="img" src="https://agricia.faperta.ugm.ac.id/wp-content/uploads/sites/377/2018/06/logo-ugm-png.png" alt="Logo">
+        </div>
+        <marquee class="py-3 text-light" id="runtext" direction="left" onmouseover="this.stop()" onmouseout="this.start()" scrollamount="10" behavior="scroll"></marquee>
+    </nav>
+    <div class="container-fluid" style="margin-top:30px">
+        <div class="row">
+            <div class="spart col-sm-6">
+                <h2>Keyword Extraction</h2>
+                <form action="/predict" method="POST" novalidate>
+                    {{ form.hidden_tag() }}
+                    <p>
+                        {{ form.transcription.label }}<br>
+                        {{ form.transcription(rows='10', class='form-control') }}
+                    </p>
+                    <p>{{ form.submit(class='btn btn-sm btn-primary') }}</p>
+                </form>
+                <hr class="d-sm-none">
+            </div>
+            <div class="spart col-sm-6">
+                {% if show_extracted_keyword %}
+                <div class="float-child">
+                    <p class="mb-2 mt-5">Keyword:</p>
+                    <div class="card">
+                        <ul class="list pt-2">
+                            {% for keyword in data %}
+                            <li>
+                                <input type="checkbox" name="keywordcheck" name="text" class="checkkey" value="{{ keyword }}">
+                                {{ keyword }}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div id="dvData">
+                        <div class="listexp"></div>
+                    </div>
+                    <div id="base64Img"></div>
+                    <!-- <a href="http://localhost:5000/download" class="btn btn-sm btn-success mt-3"><i class="fa fa-file-excel"></i> Export to CSV</a> -->
+                    <a href="#!" class="btn btn-sm btn-success mt-3 export"><i class="fa fa-file-excel"></i> Export to CSV</a>
+                    <a href="#!" class="btn btn-sm btn-info mt-3 wordcloud"><i class="fa fa-image"></i> Word Cloud</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="jumbotron text-center mb-0 mt-5 py-3 bottom">
+        <h3>Kelompok:</h3>
+        <table class="center-table">
+            <tr>
+                <td class="text-left">Risman Yorza</td>
+                <td>(20/466432/PPA/05998)</td>
+            </tr>
+            <tr>
+                <td class="text-left">Tities Novaninda Ovari</td>
+                <td>(20/466435/PPA/06001)</td>
+            </tr>
+            <tr>
+                <td class="text-left">Wisnu Agung Faisal</td>
+                <td>(20/466437/PPA/06003)</td>
+            </tr>
+        </table>
+    </div>
+    <div id="modal-wordcloud" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <a class="close-modal-circle" data-dismiss="modal" aria-label="Close">Close</a>
+                <div class="modal-body p-0"></div>
+                <div class="modal-footer p-1">
+                    <a href="#!" class="btn btn-primary btn-sm download"><i class="fa fa-download"></i> Download</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        var transcription = $("#transcription").val();
+        if (transcription == '') {
+            var runtext = '';
+        } else {
+            var runtext = transcription;
+        }
+        $(document).ready(function () {
+            $('#runtext').text(runtext);
+        });
+        $(document).ready(function () {
+            function exportTableToCSV($list, filename) {
+                var $rows = $list.find('ul:has(li)'),
+                    tmpColDelim = String.fromCharCode(11),
+                    tmpRowDelim = String.fromCharCode(0),
+                    colDelim = '","',
+                    rowDelim = '"\r\n"',
+                    csv = '"' + $rows.map(function (i, row) {
+                        var $row = $(row),
+                            $cols = $row.find('li');
+                        return $cols.map(function (j, col) {
+                            var $col = $(col),
+                                text = $col.text();
+                            return text.replace(/"/g, '""');
+                        }).get().join(tmpColDelim);
+                    }).get().join(tmpRowDelim)
+                    .split(tmpRowDelim).join(rowDelim)
+                    .split(tmpColDelim).join(colDelim) + '"';
+                if (false && window.navigator.msSaveBlob) {
+                    var blob = new Blob([decodeURIComponent(csv)], {
+                        type: 'text/csv;charset=utf8'
+                    });
+                    window.navigator.msSaveBlob(blob, filename);
+                } else if (window.Blob && window.URL) {
+                    var blob = new Blob([csv], {
+                        type: 'text/csv;charset=utf8'
+                    });
+                    var csvUrl = URL.createObjectURL(blob);
+                    $(this)
+                        .attr({
+                            'download': filename,
+                            'href': csvUrl
+                        });
+                } else {
+                    var csvData = 'data:application/csv;charset=utf-8,' + encodeURIComponent(csv);
+                    $(this)
+                        .attr({
+                            'download': filename,
+                            'href': csvData,
+                            'target': '_blank'
+                        });
+                }
+            }
+            $(".export").on('click', function (event) {
+                $(".listexp").empty();
+                var checked = $(".list .checkkey:checked").length;
+                if (checked == 0) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Anda belum memilih keyword!',
+                        confirmButtonText: 'Close',
+                    });
+                    return false;
+                } else {
+                    $(".listexp").append('<ul><li>' + transcription + '</li></ul>');
+                    $('input[name="keywordcheck"]:checked').each(function () {
+                        $(".listexp").append('<ul><li>' + this.value + '</li></ul>');
+                    });
+                    var args = [$('#dvData'), 'keyword.csv'];
+                    exportTableToCSV.apply(this, args);
+                }
+            });
+        });
+        $(".wordcloud").on("click", function () {
+            $(".loader").css('display', 'block');
+            $.ajax({
+                url: "http://localhost:5000/wordcloud",
+                type: "GET",
+                dataType: "json",
+                success: function (data) {
+                    // console.log(data.path);
+                    $(".loader").css('display', 'none');
+                    $('#modal-wordcloud').modal('show');
+                    $('.modal-body').html(
+                        '<img class="display-wordcloud" src="' + data.path + '">'
+                    );
+                    $('#base64Img').html('<input type="hidden" id="textBase64Img" value="' + data.path + '">');
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        });
+        $(".download").on("click", function () {
+            var a = document.createElement("a");
+            a.href = $('#textBase64Img').val();
+            a.download = "wordcloud.png";
+            a.click();
+        });
+    </script>
+</body>
+
+</html>
